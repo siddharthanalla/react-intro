@@ -36,7 +36,7 @@ function App() {
     setInputText((prevItems) => {return {id:items.length, title: newValue, text: prevItems.text}});
     console.log(inputText)
   }
-  const addItem = async (inputText) => {
+  const addItem = async () => {
     console.log(inputText)
     const res = await fetch('http://localhost:5000/posts', {method:'POST', headers:{'Content-type': 'application/JSON'}, body:stringify(inputText)})
     const data =res.json()
