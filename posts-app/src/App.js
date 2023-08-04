@@ -5,6 +5,7 @@ import Posts from "./components/Posts";
 import Navbar from "./components/BlogNav"
 import React, { useState , useEffect} from "react";
 import {stringify} from "flatted"
+import axios from "axios"
 
 
 function App() {
@@ -37,15 +38,19 @@ function App() {
     console.log(inputText)
   }
   const addItem = async () => {
-    console.log(inputText)
-    const res = await fetch('http://localhost:5000/posts', {method:'POST', headers:{'Content-type': 'application/JSON'}, body:stringify(inputText)})
-    const data =res.json()
-    setItems([...items, data])
+    
+    axios.post('http://localhost:5000/posts', inputText)
+    .then((response) => {
+        setItems([...items, response.data]);
+    })
+    .catch((error) => {console.error(error);})
+
+    
     // setItems((prevItems) => {
     //   return [...prevItems, inputText];
     // });
-    // setInputText({id:-1,title:"",text:""});
-    console.log(items)
+    setInputText({id:-1,title:"",text:""});
+    
 
   }
 
@@ -60,7 +65,7 @@ function App() {
     await fetch(`http://localhost:5000/posts/${id}`,{method: 'DELETE'})
     setItems((prevItems) => {
         return prevItems.filter((item, index) => {
-          return index !== id;
+          return item.id !== id;
         });
       });
   }
@@ -87,7 +92,7 @@ function App() {
           {items.map((todoItem, index) => (
             <Posts
               key={index}
-              id={index}
+              id={todoItem.id}
               text={todoItem.text}
               title={todoItem.title}
 
